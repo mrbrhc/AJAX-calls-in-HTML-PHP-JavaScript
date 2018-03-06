@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!-- 
+    name: Mason Breece
+    pawprint: mrbrhc
+    date: 11/01/2017
+
+-->
+<html>
+<head>
+    <meta charset="utf-8">
+	<title>Ninth Challenge</title>
+<!--    <link rel="stylesheet" type="text/css" href="styles.css">-->
+    <style>
+        .option{
+            background-color: skyblue;
+        }
+        
+        .option:hover {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19); 
+        }
+        
+        h1{
+            color: black;
+            font-family: fantasy;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid black;
+        }
+        
+        #pokeBox {
+            border: 1px solid black;
+            min-height: 350px;
+            font-family: fantasy;
+            color: black;
+            background-color: darkseagreen;
+            max-width: 400px;
+        }
+        
+        button {
+            background-color: whitesmoke;
+            font-family: fantasy;
+            color: black;
+            border: 1px solid black;
+        }
+        
+        #wrapper {
+            background-color: red;
+            min-height: 75%;
+            padding: 25px;
+            border: 1px solid black;
+        }
+        
+    </style>
+	<script>
+        
+	function home() {
+        
+        document.getElementById("pokeBox").innerHTML = "Loading...";
+        
+		var xmlHttp = new XMLHttpRequest();
+		
+		xmlHttp.onload = function() {
+			if (xmlHttp.status == 200) {
+                
+//                document.getElementsByTagName("pokeBox").innerHTML = "Loading...";
+
+				var xmlDoc = xmlHttp.responseText;
+                
+                var output = xmlDoc;
+                
+                console.dir(output);
+                
+                //output = how to pull information off of home
+                
+                var divObj = document.getElementById("pokeBox");
+                
+                divObj.innerHTML=output;
+				
+			}
+		}
+		
+		xmlHttp.open("GET", "http://ec2-34-226-140-164.compute-1.amazonaws.com/PublicChallenges/Challenge9/webService.php?content=home", true); //pokemon home data address
+		xmlHttp.send();
+        
+	}                  //end of home() function
+        
+	function getPokeTypeXML() {
+        
+        document.getElementById("pokeBox").innerHTML = "Loading...";
+        
+		var xmlHttp = new XMLHttpRequest();
+		
+		xmlHttp.onload = function() {
+			if (xmlHttp.status == 200) {
+                
+//                document.getElementById("pokeBox").innerHTML = "Loading...";
+
+				var xmlDoc = xmlHttp.responseXML;
+                
+                var output = "<ul>";
+                
+                var pokemonName = xmlDoc.getElementsByTagName("name"); //pokemon name
+                
+                console.dir(pokemonName);
+  
+                var pokemonType = xmlDoc.getElementsByTagName("type"); //pokemon type
+
+                for(var i = 0;i<pokemonName.length; i++){
+                    output += "<li>" + pokemonName[i].childNodes[0].nodeValue + " is type: " + pokemonType[i].childNodes[0].nodeValue + "</li>" + "<br>";
+                }
+                
+                output += "</ul>";
+                
+                var divObj = document.getElementById("pokeBox");
+                
+                divObj.innerHTML=output;
+				
+                console.dir(output);
+			}
+		}
+		
+		xmlHttp.open("GET", "http://ec2-34-226-140-164.compute-1.amazonaws.com/PublicChallenges/Challenge9/webService.php?content=data&format=xml", true); //pokemon xml data address
+		xmlHttp.send();
+        
+	}                  // end of getPokeTypeXML() function
+        
+    function getPokeEvoXML() {
+        
+        document.getElementById("pokeBox").innerHTML = "Loading...";
+        
+		var xmlHttp = new XMLHttpRequest();
+		
+		xmlHttp.onload = function() {
+			if (xmlHttp.status == 200) {
+                
+//                document.getElementById("pokeBox").innerHTML = "Loading...";
+
+				var xmlDoc = xmlHttp.responseXML;
+                
+                var output = "<ul>";
+                
+                var pokemonName = xmlDoc.getElementsByTagName("name"); //pokemon name
+                
+                var pokemonEvolution = xmlDoc.getElementsByTagName("evolution"); //pokemon evolution
+                 
+                for(var i = 0;i<pokemonName.length; i++){
+                    output += "<li>" + pokemonName[i].childNodes[0].nodeValue + " evolves into: " + pokemonEvolution[i].childNodes[0].nodeValue + "</li>" + "<br>";
+                }
+                
+                output += "</ul>";
+                
+                var divObj = document.getElementById("pokeBox");
+                
+                divObj.innerHTML=output;
+				
+			}
+		}
+		
+		xmlHttp.open("GET", "http://ec2-34-226-140-164.compute-1.amazonaws.com/PublicChallenges/Challenge9/webService.php?content=data&format=xml", true); //pokemon xml data address
+		xmlHttp.send();
+	}                  //end of getPokeEvoXML() function
+        
+    function getPokeGrowthJSON() {
+            
+            
+            document.getElementById("pokeBox").innerHTML = "Loading...";
+            
+            
+            var xmlHttp = new XMLHttpRequest();
+            
+            xmlHttp.onload = function() {
+                if (xmlHttp.status == 200) {
+                    
+                    var pokeBox = document.getElementById("pokeBox");
+                    
+                    //to get json response text
+                    var response = xmlHttp.responseText;
+
+                    response = JSON.parse(response);
+                    
+                    console.dir(response.pokedex.pokemon.name);
+                    
+                    var output = "<ul>";
+                    
+                    var counter = response.pokedex.pokemon;
+                    
+
+                    //loop to display JSON parse results
+                    for(var i = 0;i<counter.length; i++){                      
+                        output += "<li>" + response.pokedex.pokemon[i].name + " has a growth rate of: " + response.pokedex.pokemon[i].growth + "</li>" + "<br>\n";
+                        
+                        console.dir(response.pokedex.pokemon[i].name);
+                    }
+                    
+                output += "</ul>";
+                
+                var divObj = document.getElementById("pokeBox");
+                
+                divObj.innerHTML=output;
+                    
+                }
+            };
+            
+            xmlHttp.open("GET", "http://ec2-34-226-140-164.compute-1.amazonaws.com/PublicChallenges/Challenge9/webService.php?content=data&format=json", true);
+            xmlHttp.send();
+            
+    }                   // end of getPokeGrowthJSON() function
+	</script>
+</head>
+<body>
+    <div id="wrapper">
+	<h1>Pokedex</h1>
+    <!-- Content box to display results from buttons-->
+	<div id="pokeBox"></div>
+    
+    <!-- Home button to display general message-->
+    <button type="button" onclick="home()" id = "home" class="option">Home</button>    
+    
+    <!-- Type data button to display pokemon and their types with XML-->
+	<button type="button" onclick="getPokeTypeXML()" id="type" class="option">XML PokeType</button>
+    
+    <!-- Evolution data to display pokemon and their evolutions with XML-->
+    <button type="button" onclick="getPokeEvoXML()" id="evo" class="option">XML PokeEvo</button>
+    
+    <!-- Growth Data button to display pokemon and their growth data with JSON-->
+    <button type="button" onclick="getPokeGrowthJSON()" id = "growth" class="option">JSON Poke</button>
+    </div>
+    
+    
+    
+    
+    
+</body>
+</html>
